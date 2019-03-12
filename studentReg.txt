@@ -1,0 +1,29 @@
+pte357 M 1986/01/01 Pete Moss
+CS,pte357@my.uni.edu,3.20,N
+HIS1043.002
+GEO1013.005
+MAT1214.003 
+CS1713.002   
+END
+agt352 M 1957/02/02 Pop Corn
+MAT,agt352@my.uni.edu,2.8,N
+MAT3013.001
+MAT3233.002
+HIS1053.004
+END
+geh582 F 1958/03/03 Penny Loafer
+CS,pennyl@xyz.net,3.5,N
+MAT1214.003
+CS1713.002  
+GEO1013.005
+END
+sen233 M 1979/04/04 Adam Sandler
+ENG,hgilmore@xyz.net,2.93,Y
+ENG1023.002
+END
+fse234 F 1989/05/05 Melba Toast
+BIO,butter@xyz.net,2.03,N 
+HIS1043.002
+GEO1013.005
+MAT1214.003
+END
