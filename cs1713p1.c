@@ -42,10 +42,11 @@ int main(int argc, char *argv[])
     // process the Registrations
     Course courseM[MAX_COURSES];
     int numCourses = getCourses(courseM);
+    
+    
     printCourses(courseM, numCourses);
-
-
     processRegistrations(courseM, numCourses);
+    printCourses(courseM, numCourses);
 
     fclose(pFileStu);
     fclose(pFileClasses);
@@ -67,8 +68,19 @@ int getCourses(Course courseM[]){
     }
     return numCourses;
 }
-/* Prints out the courses in courseM. */
+/* Prints out the courses in courseM according to the Assignment 2 specifications. */
 void printCourses(Course courseM[], int iCourseCount){
+    printf("************************************ Courses ************************************\n");
+    printf("%-12s %-15s %-8s %-15s %-5s %-10s\n", "Course ID", "Room Number", "Days", "Times", "Seats", "Fees");
+    int i = 0;
+    for(; i < iCourseCount; i++){
+        Course c = courseM[i];
+        printf("%-12s %-15s %-8s %-15s %-5d %-10.2lf\n", c.szCourseId, c.szRoom, c.szDays, c.szTimes, c.iAvailSeats, c.dFee);
+    }
+}
+
+/* Prints out the courses in courseM. */
+void printCoursesData(Course courseM[], int iCourseCount){
     int i = 0;
     for(; i < iCourseCount; i++){
         Course c = courseM[i];
@@ -145,6 +157,8 @@ void processRegistrations(Course courseM[], int iCourseCount)
                                         , student.dGpa );
         
 
+        double fees = 0;
+        
         // ************ Handle course requests ***************
         printf("\tCourses\n");
         while(fgets(szInputBuffer, 100, pFileStu) != NULL)
@@ -184,7 +198,13 @@ void processRegistrations(Course courseM[], int iCourseCount)
 
             if(szError[0] != '\0'){
                 printf(" %s", szError);
+                printf("\n");
+                continue;
             }
+            //Course was found, so now we edit it!
+            (*newCourse).iAvailSeats--;
+            fees += (*newCourse).dFee;
+            
             printf("\n");
         }
 
@@ -194,6 +214,9 @@ void processRegistrations(Course courseM[], int iCourseCount)
             exitError(ERR_RESERVATION_DATA, szError);
         }
         bValidEnd = FALSE;
+        
+        //print fees
+        printf("\ttotal fees: $%.2lf\n",fees);
     }
 }
 
