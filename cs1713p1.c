@@ -173,23 +173,19 @@ void processRegistrations(Course courseM[], int iCourseCount)
 
             szError[0] = 0;
 
-            printf("*1");
             Course * newCourse = findCourse(courseM, iCourseCount, courseRequest.szCourseId);
             if(newCourse == NULL){
-                printf("*1.5");
                 sprintf(szError, "%s", ERR_COURSE_NOT_FOUND);
             }
-            if((*newCourse).iAvailSeats < 1){
-                printf("*1.6");
+            else if((*newCourse).iAvailSeats < 1){
                 sprintf(szError, "%s", ERR_COURSE_FULL);
             }
+
+
             if(szError[0] != '\0'){
-                printf("*2.5");
                 printf(" %s", szError);
             }
             printf("\n");
-            printf("*3");
-            fflush(stdout);
         }
 
         if (!bValidEnd)
