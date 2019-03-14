@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     // open the Student Registration stream data file
     if (pszStudentFileName == NULL)
         exitError(ERR_MISSING_SWITCH, "-s");
-    if (pszClasstFileName == NULL)
+    if (pszClassFileName == NULL)
         exitError(ERR_MISSING_SWITCH, "-c");
     
     pFileStu = fopen(pszStudentFileName, "r"); // open file for reading
