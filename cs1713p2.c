@@ -6,15 +6,29 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+//TODO: use "cs1713p3.h"
 #include "cs1713p2.h"
 
 FILE *pFileStu;               // stream Input for Student Registration data
 FILE *pFileClasses;               // stream Input for Classes data
 
+#define ERR_COURSE_OUT_OF_BOUNDS "Course Index out of bounds. index:"
+
+//TODO: move to header file
+// Node for course list
+typedef struct CourseNode {
+    struct CourseNode* pNext;
+    Course course;
+} CourseNode;
+
 void processCommandSwitches(int argc, char *argv[], char **ppszStudentFileName, char **ppszClassFileName);
 void processRegistrations(Course courseM[], int iCourseCount);
-void printCourses(Course courseM[], int iCourseCount);
-int getCourses(Course courseM[]);
+void printCourses(CourseNode* courseLL, int iCourseCount);
+int getCourses(CourseNode* courseLinkedList);
+void printCourse(Course c);
+void appendCourse(CourseNode* root, Course c);
+char * itoa(int i);
+int numCourses(CourseNode* head);
 
 
 int main(int argc, char *argv[])
@@ -40,13 +54,13 @@ int main(int argc, char *argv[])
         exitError(ERR_COURSE_FILENAME, pszClassFileName);
    
     // process the Registrations
-    Course courseM[MAX_COURSES];
-    int numCourses = getCourses(courseM);
+    CourseNode* courseLL = NULL;
+    int numCourses = getCourses(courseLL);
     
     
-    printCourses(courseM, numCourses);
-    processRegistrations(courseM, numCourses);
-    printCourses(courseM, numCourses);
+    printCourses(courseLL, numCourses);
+    //processRegistrations(courseLL, numCourses);
+    printCourses(courseLL, numCourses);
 
     fclose(pFileStu);
     fclose(pFileClasses);
@@ -55,39 +69,48 @@ int main(int argc, char *argv[])
 }
 
 /* reads courses from file. Puts courses in courseM. returns the number of courses as an int.*/
-int getCourses(Course courseM[]){
+int getCourses(CourseNode* courseLinked){
     char szInputBuffer[100];
     int numCourses = 0;
+    
     while(fgets(szInputBuffer, 100, pFileClasses) != NULL){
         Course c;
         sscanf(szInputBuffer, "%s %s %s %s %d %lf", c.szCourseId, c.szRoom, c.szDays, c.szTimes, &c.iAvailSeats, &c.dFee);
-        
-        courseM[numCourses] = c;
-
         numCourses++;
+        appendCourse(courseLinked, c);
     }
     return numCourses;
 }
-/* Prints out the courses in courseM according to the Assignment 2 specifications. */
-void printCourses(Course courseM[], int iCourseCount){
+//TODO: support Linked List
+/* Prints out the courses in courseLL according to the Assignment 2 specifications. */
+void printCourses(CourseNode* courseLL, int iCourseCount){
     printf("************************************ Courses ************************************\n");
     printf("%-12s %-15s %-8s %-15s %-5s %-10s\n", "Course ID", "Room Number", "Days", "Times", "Seats", "Fees");
     int i = 0;
     for(; i < iCourseCount; i++){
-        Course c = courseM[i];
-        printf("%-12s %-15s %-8s %-15s %-5d %-10.2lf\n", c.szCourseId, c.szRoom, c.szDays, c.szTimes, c.iAvailSeats, c.dFee);
+        Course c = (*courseLL).course;
+        printCourse(c);
+        
+        courseLL = (*courseLL).pNext;
     }
 }
+/**
+ * Prints an individual course
+ */
+void printCourse(Course c){
+    printf("%-12s %-15s %-8s %-15s %-5d %-10.2lf\n", c.szCourseId, c.szRoom, c.szDays, c.szTimes, c.iAvailSeats, c.dFee);
+}
 
+//TODO: support Linked List
 /* Prints out the courses in courseM. */
-void printCoursesData(Course courseM[], int iCourseCount){
+void printCoursesData(Course* courseM, int iCourseCount){
     int i = 0;
     for(; i < iCourseCount; i++){
         Course c = courseM[i];
         printf("%s %s %s %s %d %10lf\n", c.szCourseId, c.szRoom, c.szDays, c.szTimes, c.iAvailSeats, c.dFee);
     }
 }
-
+//TODO: make findCourse run with a linked list.
 /* returns the course corresponding to a courseID. if no course is found, NULL is returned. */
 Course * findCourse(Course courseM[], int iCourseCount, char * szCourseId){
     int i = 0;
@@ -98,6 +121,70 @@ Course * findCourse(Course courseM[], int iCourseCount, char * szCourseId){
         }
     }
     return NULL;
+}
+
+CourseNode * searchCourseLL(CourseNode* head, char * szCourseId){
+    int iCourseCount = numCourses(head);
+    
+    int i = 0;
+    for(; i < iCourseCount; i++){
+        Course c = (*head).course;
+        if(strcmp(c.szCourseId, szCourseId) == 0){
+            return head;
+        }
+        
+        head = (*head).pNext; // head = head->pNext;
+    }
+    return NULL;
+}
+
+void appendCourse(CourseNode* root, Course c){
+    CourseNode last;
+    last.pNext = NULL; // probably just my paranoia, but just in case.
+    last.course = c;
+    
+    if(root != NULL){
+        CourseNode node = *root;
+        
+        while(node.pNext != NULL){
+            node = *node.pNext;
+        }
+        
+        node.pNext = &last;
+    } else {
+        *root = last;
+    }
+    
+}
+/*
+ * Returns the course of a given index at the
+ * linked list.
+ * returns a pointer to the course.
+ */
+Course* getCourse(CourseNode* node, int index){
+    int i = 0;
+    while( i < index){
+        if((*node).pNext == NULL){
+            exitError(ERR_COURSE_OUT_OF_BOUNDS, itoa(index));
+        }
+        node = (*node).pNext;
+        i++;
+    }
+    return &(*node).course;
+}
+int numCourses(CourseNode* head){
+    int size = 0;
+    while(head != NULL){
+        head = (*head).pNext;
+        size++;
+    }
+    return size;
+}
+char * itoa(int i){
+    char* result;
+    result = malloc(sizeof(char)*50);
+    sprintf(result, "%d", i);
+    return result;
 }
 
 /****** you need to document and code this function *****/
