@@ -1,4 +1,6 @@
 # Assignment2
-First time using git
+Technically this is now
 
-didn't realize ".md" meant markdown.
+# Assignment 3
+the only difference from Assignment 2 is that this
+implementation uses Linked Lists.
