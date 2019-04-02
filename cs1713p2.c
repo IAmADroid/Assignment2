@@ -22,13 +22,14 @@ typedef struct CourseNode {
 } CourseNode;
 
 void processCommandSwitches(int argc, char *argv[], char **ppszStudentFileName, char **ppszClassFileName);
-void processRegistrations(Course courseM[], int iCourseCount);
+void processRegistrations(CourseNode* courseLL, int iCourseCount);
 void printCourses(CourseNode* courseLL, int iCourseCount);
 int getCourses(CourseNode** courseLinkedList);
 void printCourse(Course c);
 void appendCourse(CourseNode** root, Course c);
 char * itoa(int i);
 int numCourses(CourseNode* head);
+Course * findCourse(CourseNode* courseLL, int iCourseCount, char * szCourseId);
 CourseNode* makeCourseNode(Course c);
 
 
@@ -60,7 +61,7 @@ int main(int argc, char *argv[])
     
     
     printCourses(courseLL, numCourses);
-    //processRegistrations(courseLL, numCourses);
+    processRegistrations(courseLL, numCourses);
     printCourses(courseLL, numCourses);
 
     fclose(pFileStu);
@@ -112,14 +113,15 @@ void printCoursesData(Course* courseM, int iCourseCount){
     }
 }
 //TODO: make findCourse run with a linked list.
+// Probably works?
 /* returns the course corresponding to a courseID. if no course is found, NULL is returned. */
-Course * findCourse(Course courseM[], int iCourseCount, char * szCourseId){
+Course * findCourse(CourseNode* courseLL, int iCourseCount, char * szCourseId){
     int i = 0;
     for(; i < iCourseCount; i++){
-        Course c = courseM[i];
-        if(strcmp(c.szCourseId, szCourseId) == 0){
-            return &(courseM[i]);
+        if(strcmp(courseLL->course.szCourseId, szCourseId) == 0){
+            return &(courseLL->course);
         }
+        courseLL = courseLL->pNext;
     }
     return NULL;
 }
@@ -196,7 +198,7 @@ char * itoa(int i){
 
 /****** you need to document and code this function *****/
 
-void processRegistrations(Course courseM[], int iCourseCount)
+void processRegistrations(CourseNode* courseLL, int iCourseCount)
 {
     char szInputBuffer[100];
     char szError[100];
@@ -281,7 +283,7 @@ void processRegistrations(Course courseM[], int iCourseCount)
 
             szError[0] = 0;
 
-            Course * newCourse = findCourse(courseM, iCourseCount, courseRequest.szCourseId);
+            Course * newCourse = findCourse(courseLL, iCourseCount, courseRequest.szCourseId);
             if(newCourse == NULL){
                 sprintf(szError, "%s", ERR_COURSE_NOT_FOUND);
             }
