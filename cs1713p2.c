@@ -24,11 +24,12 @@ typedef struct CourseNode {
 void processCommandSwitches(int argc, char *argv[], char **ppszStudentFileName, char **ppszClassFileName);
 void processRegistrations(Course courseM[], int iCourseCount);
 void printCourses(CourseNode* courseLL, int iCourseCount);
-int getCourses(CourseNode* courseLinkedList);
+int getCourses(CourseNode** courseLinkedList);
 void printCourse(Course c);
-void appendCourse(CourseNode* root, Course c);
+void appendCourse(CourseNode** root, Course c);
 char * itoa(int i);
 int numCourses(CourseNode* head);
+CourseNode* makeCourseNode(Course c);
 
 
 int main(int argc, char *argv[])
@@ -55,7 +56,7 @@ int main(int argc, char *argv[])
    
     // process the Registrations
     CourseNode* courseLL = NULL;
-    int numCourses = getCourses(courseLL);
+    int numCourses = getCourses(&courseLL);
     
     
     printCourses(courseLL, numCourses);
@@ -69,7 +70,7 @@ int main(int argc, char *argv[])
 }
 
 /* reads courses from file. Puts courses in courseM. returns the number of courses as an int.*/
-int getCourses(CourseNode* courseLinked){
+int getCourses(CourseNode** courseLinked){
     char szInputBuffer[100];
     int numCourses = 0;
     
@@ -138,10 +139,10 @@ CourseNode * searchCourseLL(CourseNode* head, char * szCourseId){
     return NULL;
 }
 
-void appendCourse(CourseNode* root, Course c){
-    CourseNode last;
-    last.pNext = NULL; // probably just my paranoia, but just in case.
-    last.course = c;
+void appendCourse(CourseNode** pLL, Course c){
+    CourseNode * root = *pLL;
+    
+    CourseNode* last = makeCourseNode(c);
     
     if(root != NULL){
         CourseNode node = *root;
@@ -150,12 +151,19 @@ void appendCourse(CourseNode* root, Course c){
             node = *node.pNext;
         }
         
-        node.pNext = &last;
+        node.pNext = last;
     } else {
-        *root = last;
+        *pLL = last;
     }
     
 }
+CourseNode* makeCourseNode(Course c){
+    CourseNode * node = malloc(sizeof(CourseNode));
+    node->pNext = NULL;
+    node->course = c;
+    return node;
+}
+
 /*
  * Returns the course of a given index at the
  * linked list.
