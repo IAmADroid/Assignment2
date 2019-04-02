@@ -145,13 +145,12 @@ void appendCourse(CourseNode** pLL, Course c){
     CourseNode* last = makeCourseNode(c);
     
     if(root != NULL){
-        CourseNode node = *root;
         
-        while(node.pNext != NULL){
-            node = *node.pNext;
+        while(root->pNext != NULL){
+            root = root->pNext;
         }
         
-        node.pNext = last;
+        root->pNext = last;
     } else {
         *pLL = last;
     }
