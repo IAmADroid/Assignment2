@@ -169,7 +169,7 @@ We are just printing this part:
     MAT3013.001  MS1.02.07       TR       2:00-3:15pm     1     35.00     
     ENG1023.001  MH2.202         MWF      10:00-10:50am   15    35.00  
 
-So just traverse the list and print the course info from each course.
+So just traverse the list and print the course info from each course. 
 For reference: here is how I am printing our an individual course:
 
     void printCourse(Course c){
