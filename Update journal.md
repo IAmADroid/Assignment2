@@ -27,4 +27,19 @@ as you can see, we just need to fill in these functions into cs1713p4.c.
 
 I will be editing the cs1713p4.c provided by the professor and copy pasting code from my cs1713p3.c file.
 
-Since we were just on 
+Actually, since we are working on compiling, let's do it properly. Luckily, the professor gave us instructions on how to do this.
+
+* Compile the driver using  
+ gcc -g -c -o cs1713p4Driver.o cs1713p4Driver.c   
+ (you can do this instead: gcc -g -c cs1713p4Driver.c causing it to automatically create the cs1713p4Driver.o)   
+ 
+* Compile your code using  
+ gcc -g -c -o cs1713p4.o cs1713p4.c   
+ (you can do this instead: gcc -g -c cs1713p4.c causing it to automatically create the cs1713p4.o)   
+ 
+* Link them together using:  
+ gcc -g -o register cs1713p4Driver.o cs1713p4.o   
+ 
+I am using the professor's compilation instructions, but I put it in a Makefile.
+(See Makefile in GitHub repository)
+
