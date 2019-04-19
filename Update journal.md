@@ -111,9 +111,9 @@ As you can see, it is filled with `You called the <blabla> method, please delete
 That is where we will put our methods.
 
 The getCourses Method
-------------------
+----------------------------
 
-Before we can do anything useful, we have to read in some courses. so let us edit the getCourses method in cs1713p4.c
+Before we can do anything useful, we have to read in some courses. so let us edit the `getCourses` method in cs1713p4.c
 
 I would copy paste it verbatim from cs1713p3.c to cs1713p4.c, but since I haven't been following the professor, His code is formatted differently than mine.
 
@@ -146,6 +146,39 @@ Also throw this in the end of `getCourses`:
 >     fclose(pFileClasses);
 
 **Notice: I called the File `pFileClasses`. you might have called it `pFileCourses` or something else entirely.**
+
+The printCourses Method
+------------------------------
+It is important to be able to see what we are doing as early as possible. So we should make a function to print to the console.
+
+the professor already has some code in cs1713p4.c, so we just have to build off of that.
+He has marked where we needed to put our code inside the printCourses method. (see the cs1713p4.c skeleton code provided by the professor)
+
+the code already in the function just prints this:
+
+    <bla bla stuff from driver program>
+    ************************************ Courses ************************************
+    Course ID    Room Number     Days     Times           Seats Fees  
+
+We are just printing this part:
+
+    HIS1043.002  MH2.102         MWF      1:00-1:50pm     120   35.00     
+    GEO1013.005  MB1.101         TR       12:30-1:45pm    5     35.00     
+    MAT1214.003  MS1.02.03       TR       2:00-3:15pm     1     35.00     
+    CS1713.002   NPB1.202        MWF      1:00-1:50pm     0     50.00     
+    MAT3013.001  MS1.02.07       TR       2:00-3:15pm     1     35.00     
+    ENG1023.001  MH2.202         MWF      10:00-10:50am   15    35.00  
+
+So just traverse the list and print the course info from each course.
+For reference: here is how I am printing our an individual course:
+
+    void printCourse(Course c){
+        printf("%-12s %-15s %-8s %-15s %-5d %-10.2lf\n", c.szCourseId, c.szRoom, c.szDays, c.szTimes, c.iAvailSeats, c.dFee);
+    }
+You have to traverse and print each course.
+
+
+
 
 
 

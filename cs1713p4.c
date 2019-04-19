@@ -63,6 +63,8 @@ Notes:
 CourseNode* makeCourseNode(Course c);
 void appendCourse(CourseNode** root, Course c);
 
+void printCourse(Course c);
+
 
 /******************** getCourses **************************************
     int getCourses(CourseNode *pHead)
@@ -104,6 +106,8 @@ CourseNode *getCourses(char * pszCourseFileName)
     return answer;
 
 }
+
+//Added by Martin
 void appendCourse(CourseNode** pLL, Course c){
     CourseNode * root = *pLL;
     
@@ -121,6 +125,7 @@ void appendCourse(CourseNode** pLL, Course c){
     }
     
 }
+//Added by Martin
 CourseNode* makeCourseNode(Course c){
     CourseNode * node = malloc(sizeof(CourseNode));
     node->pNext = NULL;
@@ -163,8 +168,20 @@ void printCourses(char *pszHeading, CourseNode *pHead)
     printf("****************************************** Courses ******************************************\n");
     printf("%-15s%-15s%-15s%-15s%-6s%-6s\n", "Course ID","Room Number","Days","Times","Seats","Fees");
 
-    /* Your code to print the list here */
+    while(pHead != NULL){
+        Course c = pHead->course;
+        printCourse(c);
+        
+        pHead = pHead->pNext;
+    }
 
+}
+/**
+ * Added By Martin
+ * Prints an individual course
+ */
+void printCourse(Course c){
+    printf("%-12s %-15s %-8s %-15s %-5d %-10.2lf\n", c.szCourseId, c.szRoom, c.szDays, c.szTimes, c.iAvailSeats, c.dFee);
 }
 
 /********************processStudentCommand *****************************
