@@ -58,6 +58,12 @@ Notes:
 #include <stdlib.h>
 #include "cs1713p4.h"
 
+
+//Added method signatures
+CourseNode* makeCourseNode(Course c);
+void appendCourse(CourseNode** root, Course c);
+
+
 /******************** getCourses **************************************
     int getCourses(CourseNode *pHead)
 Purpose:
@@ -71,17 +77,16 @@ Notes:
 **************************************************************************/
 CourseNode *getCourses(char * pszCourseFileName)
 {
-    char szInputBuffer[100];		// input buffer for reading data
-    int i = 0;                      // subscript in courseM
-    int iScanfCnt;                  // returned by sscanf
-    FILE *pFileCourse;              // Stream Input for Courses data. 
-    CourseNode *pHead = NULL;
-    /* open the Courses stream data file */
-    if (pszCourseFileName == NULL)
-        exitError(ERR_MISSING_SWITCH, "-f");
-
-    pFileCourse = fopen(pszCourseFileName, "r");
-    if (pFileCourse == NULL)
+    //COPY PASTE GALORE!!!! (with edits. :(   )
+    
+    CourseNode* answer = NULL;
+    
+    CourseNode** courseLinked = &answer;
+    
+    FILE *pFileClasses;               // stream Input for Classes data
+    
+    pFileClasses = fopen(pszCourseFileName, "r"); // open file for reading
+    if (pFileClasses == NULL)
         exitError(ERR_COURSE_FILENAME, pszCourseFileName);
 
     char szInputBuffer[100];
@@ -91,10 +96,36 @@ CourseNode *getCourses(char * pszCourseFileName)
         Course c;
         sscanf(szInputBuffer, "%s %s %s %s %d %lf", c.szCourseId, c.szRoom, c.szDays, c.szTimes, &c.iAvailSeats, &c.dFee);
         numCourses++;
-        appendCourse(courseLinked, c);
+        appendCourse(courseLinked, c); // Not yet implemented
     }
-    return numCourses;
+    
+    fclose(pFileClasses);
+    
+    return answer;
 
+}
+void appendCourse(CourseNode** pLL, Course c){
+    CourseNode * root = *pLL;
+    
+    CourseNode* last = makeCourseNode(c);
+    
+    if(root != NULL){
+        
+        while(root->pNext != NULL){
+            root = root->pNext;
+        }
+        
+        root->pNext = last;
+    } else {
+        *pLL = last;
+    }
+    
+}
+CourseNode* makeCourseNode(Course c){
+    CourseNode * node = malloc(sizeof(CourseNode));
+    node->pNext = NULL;
+    node->course = c;
+    return node;
 }
 /******************** sortCourses **************************************
     void sortCourses(CourseNode *pHead)

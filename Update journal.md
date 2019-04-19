@@ -1,3 +1,7 @@
+Assignment 4:
+------------
+------------
+
 All you are doing is filling in the missing functions for the driver program to run.
 
 The driver program is the main program, and it will try to call your c code.
@@ -107,10 +111,10 @@ Then I got this output:
 As you can see, it is filled with `You called the <blabla> method, please delete this msg.`
 That is where we will put our methods.
 
-The Search Method
+The getCourses Method
 ------------------
 
-So the first method the driver is complaining about is the search method. so let us edit cs1713p4.c
+Before we can do anything useful, we have to read in some courses. so let us edit the getCourses method in cs1713p4.c
 
 I would copy paste it verbatim from cs1713p3.c to cs1713p4.c, but since I haven't been following the professor, His code is formatted differently than mine.
 
@@ -130,9 +134,20 @@ As you can see, my code edits the linked list through the parameters, while the 
 
 Mine also reads the file through a global variable, while the professor takes the file through the parameters. So I also have to open the file myself, like so:
 >
->     pFileClasses = fopen(pszClassFileName, "r"); // open file for reading
+>     FILE *pFileClasses;
+>     pFileClasses = fopen(pszCourseFileName, "r"); // open file for reading
 >     if (pFileClasses == NULL)
->         exitError(ERR_COURSE_FILENAME, pszClassFileName);
+>         exitError(ERR_COURSE_FILENAME, pszCourseFileName);
 
 So yeah. just a bunch of copy pasting with minor adjustments.
+*Check that your copy pasted code isn't calling other functions. If it is, copy those functions over too. and don't forget the method signature at the top.*
+
+Also throw this in the end of `getCourses`:
+>
+>     fclose(pFileClasses);
+
+**Notice: I called the File `pFileClasses`. you might have called it `pFileCourses` or something else entirely.**
+
+
+
 
