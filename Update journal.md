@@ -1,6 +1,5 @@
 Assignment 4:
-------------
-------------
+==============
 
 All you are doing is filling in the missing functions for the driver program to run.
 
