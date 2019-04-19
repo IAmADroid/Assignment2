@@ -84,16 +84,16 @@ CourseNode *getCourses(char * pszCourseFileName)
     if (pFileCourse == NULL)
         exitError(ERR_COURSE_FILENAME, pszCourseFileName);
 
-    /* get course information until EOF
-    ** fgets returns null when EOF is reached.
-     * Uses the addLast to insert
-     * Do not print anything in this method, because it will be printed after
-    */
-
-    /**** your code ******/
-
-    fclose(pFileCourse);
-    return pHead;
+    char szInputBuffer[100];
+    int numCourses = 0;
+    
+    while(fgets(szInputBuffer, 100, pFileClasses) != NULL){
+        Course c;
+        sscanf(szInputBuffer, "%s %s %s %s %d %lf", c.szCourseId, c.szRoom, c.szDays, c.szTimes, &c.iAvailSeats, &c.dFee);
+        numCourses++;
+        appendCourse(courseLinked, c);
+    }
+    return numCourses;
 
 }
 /******************** sortCourses **************************************

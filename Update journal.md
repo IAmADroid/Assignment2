@@ -104,5 +104,35 @@ Then I got this output:
     ****************************************** Courses ******************************************
     Course ID      Room Number    Days           Times          Seats Fees
     
-As you can see, it is filled with "You called the <blabla> method, please delete this msg."
+As you can see, it is filled with `You called the <blabla> method, please delete this msg.`
 That is where we will put our methods.
+
+The Search Method
+------------------
+
+So the first method the driver is complaining about is the search method. so let us edit cs1713p4.c
+
+I would copy paste it verbatim from cs1713p3.c to cs1713p4.c, but since I haven't been following the professor, His code is formatted differently than mine.
+
+Assuming you've been following the professor, you can probably copy it exactly.
+
+Let me show you some of the problems I'm having:
+
+My code (cs1713p3.c):
+>
+>     int getCourses(CourseNode** courseLinked)
+
+Professor's code (cs1713p4.c):
+>
+>     CourseNode *getCourses(char * pszCourseFileName)
+
+As you can see, my code edits the linked list through the parameters, while the professor returns the new linked list.
+
+Mine also reads the file through a global variable, while the professor takes the file through the parameters. So I also have to open the file myself, like so:
+>
+>     pFileClasses = fopen(pszClassFileName, "r"); // open file for reading
+>     if (pFileClasses == NULL)
+>         exitError(ERR_COURSE_FILENAME, pszClassFileName);
+
+So yeah. just a bunch of copy pasting with minor adjustments.
+
