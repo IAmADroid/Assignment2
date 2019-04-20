@@ -5,6 +5,8 @@ All you are doing is filling in the missing functions for the driver program to 
 
 The driver program is the main program, and it will try to call your c code.
 
+*If you get stuck, feel free to look at how I made my code. Just please do as much as you can.*
+
 Try compiling
 ------------------
 
@@ -308,5 +310,16 @@ Notice how we have less complaints than we did at the beggining? (The stuff form
     
 My program actually got stuck here, I found out I had forgotten to traverse in my `search` method.
 
+The processCourseCommand Method
+---------------------------------
+If we take a look at "p4Command.txt", we can see all the different commands that can be invoked on our program. For now we are focusing on the `COURSE` commands. 
+
+Here are the 2 `COURSE` commands specified by the professor:
+
+    COURSE INCREASE szCourseId iQuantity
+    increase the available seats for a course by the specified quantity.
+    
+    COURSE SHOW szCourseId
+    requests a display of a particular course. Show all of its information.
 
 

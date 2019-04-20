@@ -166,7 +166,7 @@ void printCourses(char *pszHeading, CourseNode *pHead)
     int i;
     printf("%s\n", pszHeading);
     printf("****************************************** Courses ******************************************\n");
-    printf("%-15s%-15s%-15s%-15s%-6s%-6s\n", "Course ID","Room Number","Days","Times","Seats","Fees");
+    printf("%-12s %-15s %-8s %-15s %-5s %-10s\n", "Course ID","Room Number","Days","Times","Seats","Fees");
 
     while(pHead != NULL){
         Course c = pHead->course;
@@ -294,12 +294,27 @@ void processCourseCommand(CourseNode *pHead
     int iQuantity;      // quantity of seats 
     int iScanfCnt;
     int i;
+    char* szCourseId[12];
+    CourseNode * pFound = NULL;
 
-    // Determine what to do based on the subCommand
-    // your code
-    printf("You called the process course command method, please delete this msg.");
-    
-    // remember to validate if the sub command does not exist
+    if (strcmp(pszSubCommand, "SHOW") == 0){
+        sscanf(pszRemainingInput, "%s", szCourseId);
+        
+        pFound = search(pHead, szCourseId);
+        
+        printCourse(pFound->course);
+        //Done
+    }
+    else if (strcmp(pszSubCommand, "INCREASE") == 0)
+    {
+        sscanf(pszRemainingInput, "%s %d", szCourseId, &iQuantity);
+        
+        pFound = search(pHead, szCourseId);
+        
+        pFound->course.iAvailSeats = pFound->course.iAvailSeats + iQuantity;
+        //done
+    }
+    else printf("   *** %s %s\n", ERR_COURSE_SUB_COMMAND, pszSubCommand);
 
 }
 /******************** search *****************************
