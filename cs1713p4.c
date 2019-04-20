@@ -246,7 +246,7 @@ void processStudentCommand(CourseNode *pHead
 
   
     }
-    else if (strcmp(pszSubCommand, "COMPLETE") == 0)
+    else if (strcmp(pszSubCommand, "COMPLETE") == 0 || strcmp(pszSubCommand, "COMPLETE\r") == 0)
     {
         // print the student's total cost
         // your code 
@@ -302,6 +302,11 @@ void processCourseCommand(CourseNode *pHead
         
         pFound = search(pHead, szCourseId);
         
+        if(pFound == NULL){
+            printf("   *** %s %s\n", ERR_COURSE_NOT_FOUND, szCourseId);
+            return;
+        }
+        
         printCourse(pFound->course);
         //Done
     }
@@ -310,6 +315,11 @@ void processCourseCommand(CourseNode *pHead
         sscanf(pszRemainingInput, "%s %d", szCourseId, &iQuantity);
         
         pFound = search(pHead, szCourseId);
+        
+        if(pFound == NULL){
+            printf("   *** %s %s\n", ERR_COURSE_NOT_FOUND, szCourseId);
+            return;
+        }
         
         pFound->course.iAvailSeats = pFound->course.iAvailSeats + iQuantity;
         //done

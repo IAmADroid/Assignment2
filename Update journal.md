@@ -322,4 +322,7 @@ Here are the 2 `COURSE` commands specified by the professor:
     COURSE SHOW szCourseId
     requests a display of a particular course. Show all of its information.
 
+Add checks for NULL in COURSE commands
+Compensate for \r.
+
 
