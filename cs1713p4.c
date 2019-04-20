@@ -61,7 +61,7 @@ Notes:
 
 //Added method signatures
 CourseNode* makeCourseNode(Course c);
-void appendCourse(CourseNode** root, Course c);
+void addLast(CourseNode** root, Course c);
 
 void printCourse(Course c);
 
@@ -72,19 +72,17 @@ CourseNode* merge(CourseNode * pHead1, CourseNode * pHead2);
 
 /******************** getCourses **************************************
     int getCourses(CourseNode *pHead)
-Purpose:
+Purpose: read courses and their attributes from a file.
 
-Parameters:
+Parameters: pszCourseFileName - The file name to read the courses from.
   
-Returns:
+Returns: Returns list of courses with their attributes as a Linked List.
     
 Notes:
     
 **************************************************************************/
 CourseNode *getCourses(char * pszCourseFileName)
 {
-    //COPY PASTE GALORE!!!! (with edits. :(   )
-    
     CourseNode* answer = NULL;
     
     CourseNode** courseLinked = &answer;
@@ -98,11 +96,13 @@ CourseNode *getCourses(char * pszCourseFileName)
     char szInputBuffer[100];
     int numCourses = 0;
     
+    
     while(fgets(szInputBuffer, 100, pFileClasses) != NULL){
+        //Reads a course and its details from the file and appending to the List
         Course c;
         sscanf(szInputBuffer, "%s %s %s %s %d %lf", c.szCourseId, c.szRoom, c.szDays, c.szTimes, &c.iAvailSeats, &c.dFee);
         numCourses++;
-        appendCourse(courseLinked, c); // Not yet implemented
+        addLast(courseLinked, c);
     }
     
     fclose(pFileClasses);
@@ -112,7 +112,7 @@ CourseNode *getCourses(char * pszCourseFileName)
 }
 
 //Added by Martin
-void appendCourse(CourseNode** pLL, Course c){
+void addLast(CourseNode** pLL, Course c){
     CourseNode * root = *pLL;
     
     CourseNode* last = makeCourseNode(c);
@@ -241,13 +241,15 @@ CourseNode* merge(CourseNode * pHead1, CourseNode * pHead2){
 
 /******************** printCourses **************************************
     void printCourses(char *pszHeading, CourseNode *pHead)
-Purpose:
+Purpose: Prints the list of courses and its details
 
 Parameters:
+ pszHeading - A header to print before printing the list of courses.
+ pHead - the List of courses.
   
-Returns:
+Returns: void
     
-Notes:
+Notes: prints to console.
     
 **************************************************************************/
 void printCourses(char *pszHeading, CourseNode *pHead)
@@ -339,7 +341,6 @@ void processStudentCommand(CourseNode *pHead
     }
     else if (strcmp(pszSubCommand, "INFO") == 0)
     {
-        //If it broke, it was here.
         // get the student information
         sscanf(pszRemainingInput, "%s,%s,%lf,%c", pStudent->szMajor, pStudent->szEmail, &pStudent->dGpa,&pStudent->cInternationalStudent);
 
@@ -349,6 +350,7 @@ void processStudentCommand(CourseNode *pHead
     {
         // print the student's total cost
         printf("Total Fees: $%.2lf\n", *pdStudentRequestTotalCost);
+        
         return;
         
         //TODO: save student to a list somewhere.
@@ -362,19 +364,23 @@ void processStudentCommand(CourseNode *pHead
         // find the course in the array
         pFound = search(pHead, courseRequest.szCourseId);
 
+        //Check if course was not found then print error.
         if(pFound == NULL){
             printf("   *** %s %s\n", ERR_COURSE_NOT_FOUND, courseRequest.szCourseId);
             return;
         }
+        //Check if course has no open seats then print error.
         else if(pFound->course.iAvailSeats < 1){
             printf("   *** %s %s\n", ERR_TOO_FEW_SEATS, courseRequest.szCourseId);
             return;
         }
+        
         //Course was found, and has seats, so now we edit it!
         *pdStudentRequestTotalCost += pFound->course.dFee;
         pFound->course.iAvailSeats--;
   
     }
+    //Student sub command was not recognized; print error.
     else printf("   *** %s %s\n", ERR_STUDENT_SUB_COMMAND, pszSubCommand);
 }
 /********************processCourseCommand *****************************
@@ -407,6 +413,7 @@ void processCourseCommand(CourseNode *pHead
     CourseNode * pFound = NULL;
 
     if (strcmp(pszSubCommand, "SHOW") == 0){
+        //Process show subcommand
         sscanf(pszRemainingInput, "%s", szCourseId);
         
         pFound = search(pHead, szCourseId);
@@ -417,10 +424,10 @@ void processCourseCommand(CourseNode *pHead
         }
         
         printCourse(pFound->course);
-        //Done
     }
     else if (strcmp(pszSubCommand, "INCREASE") == 0)
     {
+        //Process increase subcommand
         sscanf(pszRemainingInput, "%s %d", szCourseId, &iQuantity);
         
         pFound = search(pHead, szCourseId);
@@ -431,8 +438,8 @@ void processCourseCommand(CourseNode *pHead
         }
         
         pFound->course.iAvailSeats = pFound->course.iAvailSeats + iQuantity;
-        //done
     }
+    //If command type was not found, print an error
     else printf("   *** %s %s\n", ERR_COURSE_SUB_COMMAND, pszSubCommand);
 
 }
