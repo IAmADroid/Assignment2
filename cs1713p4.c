@@ -238,6 +238,7 @@ void processStudentCommand(CourseNode *pHead
         //initialize to 0
         memset(&joe, 0, sizeof(Student));
         *pStudent = joe;
+        *pdStudentRequestTotalCost = 0;
         
         sscanf(pszRemainingInput, "%s %c %s %s", pStudent->szStudentId, &pStudent->cGender, pStudent->szBirthDt,pStudent->szFullName);
         
