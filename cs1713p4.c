@@ -65,6 +65,10 @@ void appendCourse(CourseNode** root, Course c);
 
 void printCourse(Course c);
 
+CourseNode* mergeSort(CourseNode* pHead);
+CourseNode** split(CourseNode* pHead);
+CourseNode* merge(CourseNode * pHead1, CourseNode * pHead2);
+
 
 /******************** getCourses **************************************
     int getCourses(CourseNode *pHead)
@@ -143,12 +147,97 @@ Returns:
 Notes:
     
 **************************************************************************/
-void sortCourses(CourseNode **pHead)
+void sortCourses(CourseNode **ppHead)
 {
-    /**** your code ******/
-    printf("You called the sort courses method, please delete this msg.");
-
+    CourseNode* sorted = mergeSort(*ppHead);
+    *ppHead = sorted;
 }
+CourseNode* mergeSort(CourseNode* pHead){
+    if(pHead == NULL || pHead->pNext == NULL){
+        return pHead; //Already sorted!
+    }
+    
+    //printCourses("MergeSort", pHead);
+    
+    CourseNode** lists = split(pHead);
+    lists[0] = mergeSort(lists[0]);
+    lists[1] = mergeSort(lists[1]);
+    CourseNode* sorted = merge(lists[0], lists[1]);
+    free(lists);
+    
+    //printCourses("End MergeSort", sorted);
+    return sorted;
+}
+CourseNode** split(CourseNode* pHead){
+    
+    //Make an array of linked lists of size 2;
+    CourseNode** lists = malloc(sizeof(CourseNode**) * 2);
+    if(pHead == NULL){
+        lists[0] = NULL;
+        lists[1] = NULL;
+        return lists;
+    }
+    
+    CourseNode* beginning = pHead;
+    pHead = pHead->pNext;
+    CourseNode* middle = pHead;
+    CourseNode* premiddle = beginning;
+    
+    int traversals = 1;
+    
+    
+    while(pHead != NULL){
+        pHead = pHead->pNext;
+        traversals++;
+        
+        if(traversals % 2 == 1){
+            middle = middle->pNext;
+            premiddle = premiddle->pNext;
+        }
+    }
+    
+    premiddle->pNext = NULL;
+    
+    lists[0] = beginning;
+    lists[1] = middle;
+    
+    return lists;
+}
+CourseNode* merge(CourseNode * pHead1, CourseNode * pHead2){
+    CourseNode* merged = NULL;
+    CourseNode** lastPointer = &merged;
+    
+    while((pHead1 != NULL) && (pHead2 != NULL)){
+        if(strcmp(pHead1->course.szCourseId, pHead2->course.szCourseId) <= 0){
+            *lastPointer = pHead1;
+            pHead1 = pHead1->pNext;
+            
+        }
+        else {
+            *lastPointer = pHead2;
+            pHead2 = pHead2->pNext;
+        }
+        lastPointer = &((*lastPointer)->pNext);
+    }
+    
+    //Add leftover elements.
+    if(pHead1 != NULL){
+        *lastPointer = pHead1;
+        //pHead1 = pHead1->pNext;
+        //lastPointer = &((*lastPointer)->pNext);
+    }
+    
+    if(pHead2 != NULL){
+        *lastPointer = pHead2;
+        //pHead2 = pHead2->pNext;
+        //lastPointer = &((*lastPointer)->pNext);
+    }
+    
+    //*lastPointer = NULL;
+    
+    return merged;
+}
+
 
 /******************** printCourses **************************************
     void printCourses(char *pszHeading, CourseNode *pHead)
@@ -164,7 +253,7 @@ Notes:
 void printCourses(char *pszHeading, CourseNode *pHead)
 {
     int i;
-    printf("%s\n", pszHeading);
+    printf("%s\n\n", pszHeading);
     printf("****************************************** Courses ******************************************\n");
     printf("%-12s %-15s %-8s %-15s %-5s %-10s\n", "Course ID","Room Number","Days","Times","Seats","Fees");
 
@@ -175,6 +264,7 @@ void printCourses(char *pszHeading, CourseNode *pHead)
         pHead = pHead->pNext;
     }
 
+    printf("\n");
 }
 /**
  * Added By Martin

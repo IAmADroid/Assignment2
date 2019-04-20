@@ -351,3 +351,5 @@ If we look at the professor's example output in the specs, he clearly wants us t
 
 Actually, since I'm late already, might as well do a decent sort.
 
+Implemented merge sort.
+
