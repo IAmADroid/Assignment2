@@ -329,13 +329,13 @@ The processStudentCommand Method
 
 Compensate for \r.
 
-in BEGIN, make sure to reinitialize the student and set the fees to 0.
+in `BEGIN`, make sure to reinitialize the student and set the fees to 0.
 
 check for course not found in register
 
 Design specs ("assignment4.pdf") by professor call for "REQUEST", but code skeleton and command file both say "REGISTER".
 
-Professor changed ERR_COURSE_FULL to ERR_TOO_FEW_SEATS
+Professor changed `ERR_COURSE_FULL` to `ERR_TOO_FEW_SEATS`
 
 Ugh this was a nightmare.
 
