@@ -214,8 +214,99 @@ For me, My program didn't compile, because my `getCourses` was calling `exitErro
 
 **Remember to delete the test code you added**
 
+The search Method
+---------------------------------
+Next method up on the list! Gotta make it! 
 
+Look for the method stub in "cs1713p4.c": 
+`CourseNode * search(CourseNode *pHead, char *pszMatchCourseId)` 
 
+This is where we put our code. We just have to iterate through the linked list specified by `pHead`, check for a match with `pszMatchCourseId`, and return the corresponding `CourseNode`.
+
+Now when we compile and run, we should get: (See section titled "Try compiling" for instructions on compiling and running.)
+
+    Initial Courses
+    ****************************************** Courses ******************************************
+    Course ID      Room Number    Days           Times          Seats Fees  
+    HIS1043.002  MH2.102         MWF      1:00-1:50pm     120   35.00     
+    GEO1013.005  MB1.101         TR       12:30-1:45pm    5     35.00     
+    MAT1214.003  MS1.02.03       TR       2:00-3:15pm     1     35.00     
+    CS1713.002   NPB1.202        MWF      1:00-1:50pm     0     50.00     
+    MAT3013.001  MS1.02.07       TR       2:00-3:15pm     1     35.00     
+    ENG1023.001  MS1.02.07       MWF      10:00-10:50am   15    35.00     
+    ART2113.001  AR4.01          TR       11:30-12:45pm   10    45.00     
+    ART3023.001  AR4.04          MWF      12:00-1:50pm    7     35.00     
+    You called the sort courses method, please delete this msg.Sorted Courses
+    ****************************************** Courses ******************************************
+    Course ID      Room Number    Days           Times          Seats Fees  
+    HIS1043.002  MH2.102         MWF      1:00-1:50pm     120   35.00     
+    GEO1013.005  MB1.101         TR       12:30-1:45pm    5     35.00     
+    MAT1214.003  MS1.02.03       TR       2:00-3:15pm     1     35.00     
+    CS1713.002   NPB1.202        MWF      1:00-1:50pm     0     50.00     
+    MAT3013.001  MS1.02.07       TR       2:00-3:15pm     1     35.00     
+    ENG1023.001  MS1.02.07       MWF      10:00-10:50am   15    35.00     
+    ART2113.001  AR4.01          TR       11:30-12:45pm   10    45.00     
+    ART3023.001  AR4.04          MWF      12:00-1:50pm    7     35.00     
+    STUDENT BEGIN pte357 M 1986/01/01 Pete Moss
+    STUDENT INFO CS,pte357@my.uni.edu,3.20,N
+    STUDENT REGISTER HIS1043.002    
+    STUDENT REGISTER GEO1013.005
+    STUDENT REGISTER MAT1214.003
+    STUDENT REGISTER CS1713.002
+    STUDENT COMPLETE
+       *** invalid STUDENT subcommand  COMPLETE
+    STUDENT BEGIN agt352 M 1957/02/02 Pop Corn
+    STUDENT INFO MAT,agt352@my.uni.edu,2.8,N
+    STUDENT REGISTER HIS1043.002
+    STUDENT REGISTER ENG1023.003
+    STUDENT REGISTER ART3023.001
+    STUDENT COMPLETE
+       *** invalid STUDENT subcommand  COMPLETE
+    COURSE INCREASE MAT1214.003 15
+    You called the process course command method, please delete this msg.COURSE SHOW MAT1214.003
+    You called the process course command method, please delete this msg.STUDENT BEGIN geh582 F 1958/03/03 Penny Loafer
+    STUDENT INFO CS,pennyl@xyz.net,3.5,N
+    STUDENT REGISTER MAT1214.003
+    STUDENT REGISTER CS1713.002
+    STUDENT COMPLETE
+       *** invalid STUDENT subcommand  COMPLETE
+    STUDENT BEGIN sen233 M 1979/04/04 Adam Sandler
+    STUDENT INFO ENG,hgilmore@xyz.net,2.93,Y
+    STUDENT REGISTER ENG1023.001
+    STUDENT REGISTER GEO1013.005
+    STUDENT REGISTER MAT3013.001
+    STUDENT COMPLETE
+       *** invalid STUDENT subcommand  COMPLETE
+    COURSE SHOW MAT3013.001
+    You called the process course command method, please delete this msg.STUDENT BEGIN fse234 F 1989/05/05 Melba Toast
+    STUDENT INFO BIO,butter@xyz.net,2.03,N
+    STUDENT REGISTER CS1713.002
+    STUDENT REGISTER ENG1023.001
+    STUDENT COMPLETE
+       *** invalid STUDENT subcommand  COMPLETE
+    COURSE INCREASE HIS1043.004 10
+    You called the process course command method, please delete this msg.COURSE SHOW HIS1043.004
+    You called the process course command method, please delete this msg.COURSE SHOW CS1713.002
+    You called the process course command method, please delete this msg.COURSE SHOW ART2113.001
+    You called the process course command method, please delete this msg.STUDENT BEGIN bob420 M 1942/08/29 Bob Ross
+    STUDENT INFO ART,happylittlecloud@yourworld.net,4.0,N
+    STUDENT REGISTER ART2113.001
+    STUDENT REGISTER ART3023.001
+    STUDENT COMPLETEResulting Courses
+    ****************************************** Courses ******************************************
+    Course ID      Room Number    Days           Times          Seats Fees  
+    HIS1043.002  MH2.102         MWF      1:00-1:50pm     120   35.00     
+    GEO1013.005  MB1.101         TR       12:30-1:45pm    5     35.00     
+    MAT1214.003  MS1.02.03       TR       2:00-3:15pm     1     35.00     
+    CS1713.002   NPB1.202        MWF      1:00-1:50pm     0     50.00     
+    MAT3013.001  MS1.02.07       TR       2:00-3:15pm     1     35.00     
+    ENG1023.001  MS1.02.07       MWF      10:00-10:50am   15    35.00     
+    ART2113.001  AR4.01          TR       11:30-12:45pm   10    45.00     
+    ART3023.001  AR4.04          MWF      12:00-1:50pm    7     35.00 
+    
+Notice how we have less complaints than we did at the beggining? (The stuff formatted like `You called the <blabla> method, please delete this msg.`) 
+    
+My program actually got stuck here, I found out I had forgotten to traverse in my `search` method.
 
 
 

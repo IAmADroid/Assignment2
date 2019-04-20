@@ -65,25 +65,6 @@ void appendCourse(CourseNode** root, Course c);
 
 void printCourse(Course c);
 
-void exitError(char *pszMessage, char *pszDiagnosticInfo);//Needs to be deleted.
-
-//This is test code. It should be deleted.
-int main(int argc, char *argv[]){
-    CourseNode* head = getCourses("p4Courses.txt");
-    printCourses("This is Test numero uno",head);
-    
-    return (0);
-}
-
-//Added by martin, may need to be deleted.
-void exitError(char *pszMessage, char *pszDiagnosticInfo)
-{
-    fprintf(stderr, "Error: %s %s\n"
-            , pszMessage
-            , pszDiagnosticInfo);
-    exit(ERROR_PROCESSING);
-}
-
 
 /******************** getCourses **************************************
     int getCourses(CourseNode *pHead)
@@ -337,8 +318,11 @@ Notes:
 **************************************************************************/
 CourseNode * search(CourseNode *pHead, char *pszMatchCourseId)
 {
-    // your code
-    printf("You called the search method, please delete this msg.");
-
-
+    while(pHead != NULL){
+        if(strcmp(pHead->course.szCourseId,pszMatchCourseId) == 0)
+            return pHead;
+        
+        pHead = pHead->pNext;
+    }
+    return NULL;
 }
