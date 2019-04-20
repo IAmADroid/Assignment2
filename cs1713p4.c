@@ -138,13 +138,16 @@ CourseNode* makeCourseNode(Course c){
 }
 /******************** sortCourses **************************************
     void sortCourses(CourseNode *pHead)
-Purpose:
+Purpose: sort the courses in the linked list by szCourseId.
 
 Parameters:
+ I/O ppHead     a pointer to a linked list of Courses
   
 Returns:
+ void.
     
 Notes:
+ Implements merge sort algorithm. Stable sort. Updates the existing linked list to its sorted version.
     
 **************************************************************************/
 void sortCourses(CourseNode **ppHead)
@@ -153,21 +156,36 @@ void sortCourses(CourseNode **ppHead)
     *ppHead = sorted;
 }
 CourseNode* mergeSort(CourseNode* pHead){
+    //Check if list has 0 or 1 elements.
     if(pHead == NULL || pHead->pNext == NULL){
         return pHead; //Already sorted!
     }
-    
-    //printCourses("MergeSort", pHead);
-    
+    //Cut list in half
     CourseNode** lists = split(pHead);
+    //sort each half
     lists[0] = mergeSort(lists[0]);
     lists[1] = mergeSort(lists[1]);
+    //combine halves.
     CourseNode* sorted = merge(lists[0], lists[1]);
     free(lists);
     
-    //printCourses("End MergeSort", sorted);
     return sorted;
 }
+/****************** split ********************
+    CourseNode** split(CourseNode* pHead)
+ Purpose: cut a list of elements into 2 roughly equal pieces.
+ 
+ Parameters:
+  I   pHead   a Linked List
+ 
+ Returns:
+  CourseNode**    an array of 2 elements. each element is a LinkedList
+ 
+ Notes:
+  split will happily cut a linked list that is empty or has one element.
+ In the second case, the first element will be part of the first list,
+ and the second list will be empty.
+ *********************************************/
 CourseNode** split(CourseNode* pHead){
     
     //Make an array of linked lists of size 2;
@@ -223,17 +241,11 @@ CourseNode* merge(CourseNode * pHead1, CourseNode * pHead2){
     //Add leftover elements.
     if(pHead1 != NULL){
         *lastPointer = pHead1;
-        //pHead1 = pHead1->pNext;
-        //lastPointer = &((*lastPointer)->pNext);
     }
     
     if(pHead2 != NULL){
         *lastPointer = pHead2;
-        //pHead2 = pHead2->pNext;
-        //lastPointer = &((*lastPointer)->pNext);
     }
-    
-    //*lastPointer = NULL;
     
     return merged;
 }
