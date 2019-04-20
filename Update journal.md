@@ -170,13 +170,49 @@ We are just printing this part:
     ENG1023.001  MH2.202         MWF      10:00-10:50am   15    35.00  
 
 So just traverse the list and print the course info from each course. 
-For reference: here is how I am printing our an individual course:
+For reference: here is how I am printing out an individual course:
 
     void printCourse(Course c){
         printf("%-12s %-15s %-8s %-15s %-5d %-10.2lf\n", c.szCourseId, c.szRoom, c.szDays, c.szTimes, c.iAvailSeats, c.dFee);
     }
 You have to traverse and print each course.
 
+Test 1
+---------
+We don't want to run hundreds of lines of code without a single test! That's begging for future punishment.
+
+Copy this code into "cs1713p4.c":
+
+    //This is test code. It should be deleted.
+    int main(int argc, char *argv[]){
+        CourseNode* head = getCourses("p4Courses.txt");
+        printCourses("This is Test numero uno",head);
+        
+        return (0);
+    }
+Then compile with: `gcc -g -o test cs1713p4.c` 
+
+run it with: `./test` 
+
+You should get this as your output:
+
+    This is Test numero uno
+    ****************************************** Courses ******************************************
+    Course ID      Room Number    Days           Times          Seats Fees  
+    HIS1043.002  MH2.102         MWF      1:00-1:50pm     120   35.00     
+    GEO1013.005  MB1.101         TR       12:30-1:45pm    5     35.00     
+    MAT1214.003  MS1.02.03       TR       2:00-3:15pm     1     35.00     
+    CS1713.002   NPB1.202        MWF      1:00-1:50pm     0     50.00     
+    MAT3013.001  MS1.02.07       TR       2:00-3:15pm     1     35.00     
+    ENG1023.001  MS1.02.07       MWF      10:00-10:50am   15    35.00     
+    ART2113.001  AR4.01          TR       11:30-12:45pm   10    45.00     
+    ART3023.001  AR4.04          MWF      12:00-1:50pm    7     35.00     
+
+If you get the courses in a different order, that is okay, since we will sort them later anyway. 
+
+For me, My program didn't compile, because my `getCourses` was calling `exitError`, which was undefined. I just had to copy paste those functions in.
+
+**Remember to delete the test code you added**
 
 
 
