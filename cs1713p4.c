@@ -234,36 +234,54 @@ void processStudentCommand(CourseNode *pHead
     if (strcmp(pszSubCommand, "BEGIN") == 0)
     {
         // get the Student Identification Information
-        // your code
+        Student joe;
+        //initialize to 0
+        memset(&joe, 0, sizeof(Student));
+        *pStudent = joe;
+        
+        sscanf(pszRemainingInput, "%s %c %s %s", pStudent->szStudentId, &pStudent->cGender, pStudent->szBirthDt,pStudent->szFullName);
+        
+        
         
         // remember to validate the data
 
     }
     else if (strcmp(pszSubCommand, "INFO") == 0)
     {
+        //If it broke, it was here.
         // get the student information
-        // your code 
+        sscanf(pszRemainingInput, "%s,%s,%lf,%c", pStudent->szMajor, pStudent->szEmail, &pStudent->dGpa,&pStudent->cInternationalStudent);
 
   
     }
     else if (strcmp(pszSubCommand, "COMPLETE") == 0 || strcmp(pszSubCommand, "COMPLETE\r") == 0)
     {
         // print the student's total cost
-        // your code 
-
+        printf("Total Fees: $%.2lf\n", *pdStudentRequestTotalCost);
+        return;
+        
+        //TODO: save student to a list somewhere.
     }
     else if (strcmp(pszSubCommand, "REGISTER") == 0)
     {
         CourseNode * pFound;
         // get a course request
-        // your code 
-
+        sscanf(pszRemainingInput, "%s", courseRequest.szCourseId);
 
         // find the course in the array
         pFound = search(pHead, courseRequest.szCourseId);
 
-        // your code
-
+        if(pFound == NULL){
+            printf("   *** %s %s\n", ERR_COURSE_NOT_FOUND, courseRequest.szCourseId);
+            return;
+        }
+        else if(pFound->course.iAvailSeats < 1){
+            printf("   *** %s %s\n", ERR_TOO_FEW_SEATS, courseRequest.szCourseId);
+            return;
+        }
+        //Course was found, and has seats, so now we edit it!
+        *pdStudentRequestTotalCost += pFound->course.dFee;
+        pFound->course.iAvailSeats--;
   
     }
     else printf("   *** %s %s\n", ERR_STUDENT_SUB_COMMAND, pszSubCommand);
@@ -294,7 +312,7 @@ void processCourseCommand(CourseNode *pHead
     int iQuantity;      // quantity of seats 
     int iScanfCnt;
     int i;
-    char* szCourseId[12];
+    char szCourseId[12];
     CourseNode * pFound = NULL;
 
     if (strcmp(pszSubCommand, "SHOW") == 0){

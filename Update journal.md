@@ -323,6 +323,29 @@ Here are the 2 `COURSE` commands specified by the professor:
     requests a display of a particular course. Show all of its information.
 
 Add checks for NULL in COURSE commands
+
+The processStudentCommand Method
+----------------------------------
+
 Compensate for \r.
 
+check for course not found in register
+
+Design specs ("assignment4.pdf") by professor call for "REQUEST", but code skeleton and command file both say "REGISTER".
+
+Professor changed ERR_COURSE_FULL to ERR_TOO_FEW_SEATS
+
+Ugh this was a nightmare.
+
+the sortCourses Method
+-------------------------
+My goodness that was a lot of work to just get here.
+Luckily nothing else depended on the sorted version of the LL.
+
+Personally, I'm going to make a second linkedList, and use selection sort.
+It is terribly inefficient, but it's easy to understand and implement.
+
+If we look at the professor's example output in the specs, he clearly wants us to sort by Course ID.
+
+Actually, since I'm late already, might as well do a decent sort.
 
