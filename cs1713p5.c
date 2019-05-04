@@ -58,6 +58,12 @@ Notes:
 #include <stdlib.h>
 #include "cs1713p5.h"
 
+//Added Headers
+CourseNode* makeCourseNode(Course c);
+void insertTree(CourseNode** pTree, Course c);
+void printFormattedTree(CourseNode *pRoot); // From driver program.
+void printCourse(Course c);
+
 /******************** getCourses **************************************
     int getCourses(CourseNode *pRoot)
 Purpose:
@@ -74,25 +80,56 @@ CourseNode *getCourses(char * pszCourseFileName)
     char szInputBuffer[100];		// input buffer for reading data
     int i = 0;                      // subscript in courseM
     int iScanfCnt;                  // returned by sscanf
-    FILE *pFileCourse;              // Stream Input for Courses data. 
-    CourseNode *pRoot = NULL;
-    /* open the Courses stream data file */
-    if (pszCourseFileName == NULL)
-        exitError(ERR_MISSING_SWITCH, "-f");
-
-    pFileCourse = fopen(pszCourseFileName, "r");
-    if (pFileCourse == NULL)
+    FILE *pFileClasses;             // Stream Input for Courses data.
+    
+    CourseNode* pTreeRoot = NULL; //change to binary tree
+    
+    pFileClasses = fopen(pszCourseFileName, "r"); // open file for reading
+    if (pFileClasses == NULL)
         exitError(ERR_COURSE_FILENAME, pszCourseFileName);
-
-    /* get course information until EOF
-    ** fgets returns null when EOF is reached.
-    */
-
-    /**** your code ******/
-
-    fclose(pFileCourse);
-    return pRoot;
-
+    
+    int numCourses = 0;
+    
+    
+    while(fgets(szInputBuffer, 100, pFileClasses) != NULL){
+        //Reads a course and its details from the file and appending to the List
+        Course c;
+        sscanf(szInputBuffer, "%s %s %s %s %d %lf", c.szCourseId, c.szRoom, c.szDays, c.szTimes, &c.iAvailSeats, &c.dFee);
+        numCourses++;
+        insertTree(&pTreeRoot, c); //Change to Binary Tree
+    }
+    
+    fclose(pFileClasses);
+    
+    return pTreeRoot;
+    
+}
+//Added by Martin
+void insertTree(CourseNode** pTree, Course c){
+    
+    CourseNode * pRoot = *pTree;
+    if(pRoot == NULL){
+        CourseNode * pLast = makeCourseNode(c);
+        *pTree = pLast;
+        return;
+    }
+    
+    if(strcmp(c.szCourseId, pRoot->course.szCourseId) < 0){
+        insertTree(&pRoot->pLeft, c);
+    } else if(strcmp(c.szCourseId, pRoot->course.szCourseId) > 0){
+        insertTree(&pRoot->pRight, c);
+    } else {
+        fprintf(stderr, "Duplicate course read\n");
+        return;
+    }
+}
+//Added by Martin
+CourseNode* makeCourseNode(Course c){
+    CourseNode * node = malloc(sizeof(CourseNode));
+    node->pLeft = NULL;
+    node->pRight = NULL;
+    node->course = c;
+    return node;
 }
 
 /******************** printCourses **************************************
@@ -130,7 +167,7 @@ Notes:
 **************************************************************************/
 void printTree(CourseNode *p)
 {
-    
+    printFormattedTree(p); // Method from Driver Program.
 }
 
 /********************processStudentCommand *****************************
@@ -218,6 +255,15 @@ void processStudentCommand(CourseNode *pRoot
     }
     else printf("   *** %s %s\n", ERR_STUDENT_SUB_COMMAND, pszSubCommand);
 }
+
+/**
+ * Added By Martin
+ * Prints an individual course
+ */
+void printCourse(Course c){
+    printf("%-12s %-15s %-8s %-15s %-5d %-10.2lf\n", c.szCourseId, c.szRoom, c.szDays, c.szTimes, c.iAvailSeats, c.dFee);
+}
+
 /********************processCourseCommand *****************************
     void processCourseCommand(CourseNode *pRoot
          , char *pszSubCommand, char *pszRemainingInput)
@@ -246,8 +292,48 @@ void processCourseCommand(CourseNode *pRoot
     int i;
 
     // Determine what to do based on the subCommand
-    // your code
-
+    char szCourseId[12];
+    CourseNode * pFound = NULL;
+    
+    if (strcmp(pszSubCommand, "SHOW") == 0){
+        //Process show subcommand
+        //printf("SHOW not yet implemented. needs SEARCH\n");
+        
+        
+        sscanf(pszRemainingInput, "%s", szCourseId);
+        
+        pFound = search(pRoot, szCourseId);
+        
+        if(pFound == NULL){
+            printf("   *** %s %s\n", ERR_COURSE_NOT_FOUND, szCourseId);
+            return;
+        }
+        
+        printCourse(pFound->course);
+        
+    }
+    else if (strcmp(pszSubCommand, "INCREASE") == 0)
+    {
+        //Process increase subcommand
+        //printf("Increase not yet implemented. needs SEARCH\n");
+        
+        sscanf(pszRemainingInput, "%s %d", szCourseId, &iQuantity);
+        
+        pFound = search(pRoot, szCourseId);
+        
+        if(pFound == NULL){
+            printf("   *** %s %s\n", ERR_COURSE_NOT_FOUND, szCourseId);
+            return;
+        }
+        
+        pFound->course.iAvailSeats = pFound->course.iAvailSeats + iQuantity;
+    }
+    else if (strcmp(pszSubCommand, "TPRINT") == 0 || strcmp(pszSubCommand, "TPRINT\r") == 0)
+    {
+        printTree(pRoot);
+    }
+    //If command type was not found, print an error
+    else printf("   *** %s %s\n", ERR_COURSE_SUB_COMMAND, pszSubCommand);
 }
 /******************** search *****************************
     CourseNode * search(CourseNode *pRoot, char *pszMatchCourseId)
@@ -264,7 +350,18 @@ Notes:
 **************************************************************************/
 CourseNode * search(CourseNode *pRoot, char *pszMatchCourseId)
 {
-    // your code
-
-
+    if(pRoot == NULL){
+        return NULL; //Course not found
+    }
+    if(strcmp(pszMatchCourseId, pRoot->course.szCourseId) < 0){
+        return search(pRoot->pLeft, pszMatchCourseId);
+    }
+    if(strcmp(pszMatchCourseId, pRoot->course.szCourseId) > 0){
+        return search(pRoot->pRight, pszMatchCourseId);
+    }
+    if(strcmp(pszMatchCourseId, pRoot->course.szCourseId) == 0){
+        return pRoot; //We found it!
+    }
+    fprintf(stderr, "This part is unreachable, how did you get here?\n");
+    return NULL;
 }
