@@ -63,18 +63,19 @@ CourseNode* makeCourseNode(Course c);
 void insertTree(CourseNode** pTree, Course c);
 void printFormattedTree(CourseNode *pRoot); // From driver program.
 void printCourse(Course c);
+void printCoursesHelper(CourseNode* pRoot);
 
 /******************** getCourses **************************************
-    int getCourses(CourseNode *pRoot)
-Purpose:
-
-Parameters:
-  
-Returns:
-    
-Notes:
-    
-**************************************************************************/
+ int getCourses(CourseNode *pHead)
+ Purpose: read courses and their attributes from a file.
+ 
+ Parameters: pszCourseFileName - The file name to read the courses from.
+ 
+ Returns: Returns list of courses with their attributes as a Linked List.
+ 
+ Notes:
+ 
+ **************************************************************************/
 CourseNode *getCourses(char * pszCourseFileName)
 {
     char szInputBuffer[100];		// input buffer for reading data
@@ -133,38 +134,60 @@ CourseNode* makeCourseNode(Course c){
 }
 
 /******************** printCourses **************************************
-    void printCourses(char *pszHeading, CourseNode *pRoot)
-Purpose:
-
-Parameters:
-  
-Returns:
-    
-Notes:
-    
-**************************************************************************/
+ void printCourses(char *pszHeading, CourseNode *pHead)
+ Purpose: Prints the list of courses and its details
+ 
+ Parameters:
+ pszHeading - A header to print before printing the list of courses.
+ pHead - the List of courses.
+ 
+ Returns: void
+ 
+ Notes: prints to console. It is printing an in order traversal of the tree, so the courses are sorted.
+ 
+ **************************************************************************/
 void printCourses(char *pszHeading, CourseNode *pRoot)
 {
     int i;
-    printf("%s\n", pszHeading);
+    printf("%s\n\n", pszHeading);
     printf("****************************************** Courses ******************************************\n");
     printf("%-15s%-15s%-15s%-15s%-6s%-6s\n", "Course ID","Room Number","Days","Times","Seats","Fees");
 
-    /* Your code to print the tree here */
+    printCoursesHelper(pRoot);
+    printf("\n");
 
+}
+/**
+ * Added By Martin
+ */
+void printCoursesHelper(CourseNode* pRoot){
+    if(pRoot == NULL){
+        return;
+    }
+    printCoursesHelper(pRoot->pLeft);
+    printCourse(pRoot->course);
+    printCoursesHelper(pRoot->pRight);
+}
+/**
+ * Added By Martin
+ * Prints an individual course
+ */
+void printCourse(Course c){
+    //Professor, what's with the weird spacing?
+    printf("%-12s   %-15s%-8s       %-15s%-5d %-10.2lf\n", c.szCourseId, c.szRoom, c.szDays, c.szTimes, c.iAvailSeats, c.dFee);
 }
 
 /******************** printTree **************************************
-    void printTree(CourseNode *p);
-Purpose:
-
-Parameters:
-  
-Returns:
-    
-Notes:
-    
-**************************************************************************/
+ void printTree(CourseNode *pRoot)
+ Purpose:
+ prints a binary tree formatted to show structure.
+ 
+ Parameters:
+ I   CourseNode *pRoot           Root of the tree to be printed
+ 
+ Notes:
+ This function uses the printFormattedTree function from the driver program.
+ **************************************************************************/
 void printTree(CourseNode *p)
 {
     printFormattedTree(p); // Method from Driver Program.
@@ -209,7 +232,7 @@ Parameters:
 Notes:
 
 **************************************************************************/
-void processStudentCommand(CourseNode *pRoot
+void processStudentCommand(CourseNode *pHead
     , char *pszSubCommand, char *pszRemainingInput
     , Student *pStudent, double *pdStudentRequestTotalCost)
 {
@@ -220,49 +243,65 @@ void processStudentCommand(CourseNode *pRoot
     if (strcmp(pszSubCommand, "BEGIN") == 0)
     {
         // get the Student Identification Information
-        // your code
-
-        if (iScanfCnt < 4)
-            exitError(ERR_STUDENT_ID_DATA, pszRemainingInput);
-
+        Student joe;
+        //initialize to 0
+        memset(&joe, 0, sizeof(Student));
+        *pStudent = joe;
+        *pdStudentRequestTotalCost = 0;
+        
+        sscanf(pszRemainingInput, "%s %c %s %s", pStudent->szStudentId, &pStudent->cGender, pStudent->szBirthDt,pStudent->szFullName);
+        
+        
+        
+        // remember to validate the data
+        
     }
     else if (strcmp(pszSubCommand, "INFO") == 0)
     {
         // get the student information
-        // your code 
-
-  
+        sscanf(pszRemainingInput, "%s,%s,%lf,%c", pStudent->szMajor, pStudent->szEmail, &pStudent->dGpa,&pStudent->cInternationalStudent);
+        
+        
     }
-    else if (strcmp(pszSubCommand, "COMPLETE") == 0)
+    else if (strcmp(pszSubCommand, "COMPLETE") == 0 || strcmp(pszSubCommand, "COMPLETE\r") == 0)
     {
         // print the student's total cost
-        // your code 
-
+        printf("Total Fees: $%.2lf\n", *pdStudentRequestTotalCost);
+        
+        return;
+        
+        //TODO: save student to a list somewhere.
     }
     else if (strcmp(pszSubCommand, "REGISTER") == 0)
     {
         CourseNode * pFound;
         // get a course request
-        // your code 
-
-
+        sscanf(pszRemainingInput, "%s", courseRequest.szCourseId);
+        
         // find the course in the array
-        pFound = search(pRoot, courseRequest.szCourseId);
-
-        // your code
-
-  
+        pFound = search(pHead, courseRequest.szCourseId);
+        
+        //Check if course was not found then print error.
+        if(pFound == NULL){
+            printf("   *** %s %s\n", ERR_COURSE_NOT_FOUND, courseRequest.szCourseId);
+            return;
+        }
+        //Check if course has no open seats then print error.
+        else if(pFound->course.iAvailSeats < 1){
+            printf("   *** %s %s\n", ERR_TOO_FEW_SEATS, courseRequest.szCourseId);
+            return;
+        }
+        
+        //Course was found, and has seats, so now we edit it!
+        *pdStudentRequestTotalCost += pFound->course.dFee;
+        pFound->course.iAvailSeats--;
+        
     }
+    //Student sub command was not recognized; print error.
     else printf("   *** %s %s\n", ERR_STUDENT_SUB_COMMAND, pszSubCommand);
 }
 
-/**
- * Added By Martin
- * Prints an individual course
- */
-void printCourse(Course c){
-    printf("%-12s %-15s %-8s %-15s %-5d %-10.2lf\n", c.szCourseId, c.szRoom, c.szDays, c.szTimes, c.iAvailSeats, c.dFee);
-}
+
 
 /********************processCourseCommand *****************************
     void processCourseCommand(CourseNode *pRoot
@@ -273,9 +312,12 @@ Purpose:
                increase the available seats for a course by the specified quantity.
         COURSE SHOW szCourseId    
                requests a display of a particular course.  Show all of its information.
+        COURSE TPRINT
+               This prints the binary tree in a structured format. The code for this
+               print is provided in the driver, this code will simply call printFormattedTree
+               through the printTree method.
 Parameters:
     I/O CourseNode *pRoot              Tree of courses
-    I   int   iCourseCnt              Number of elments in pRoot
     I   char  *pszSubCommand          Should be INCREASE or SHOW
     I   char  *pzRemainingInput       Points to the remaining characters in the input
                                       line (i.e., the characters that following the
@@ -337,7 +379,7 @@ void processCourseCommand(CourseNode *pRoot
 }
 /******************** search *****************************
     CourseNode * search(CourseNode *pRoot, char *pszMatchCourseId)
-Purpose:
+Purpose: searches the binary tree for a course that matches pszMatchCourseId.
     
 Parameters:
     I   CourseNode *pRoot              Tree of courses
